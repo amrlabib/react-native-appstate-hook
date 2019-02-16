@@ -10,6 +10,18 @@
     "type": "git",
     "url": "git+https://github.com/amrlabib/react-native-appstate-hook.git"
   },
+  "keywords": [
+    "react",
+    "react-native",
+    "hook",
+    "component",
+    "hooks",
+    "appState",
+    "app",
+    "state",
+    "iOS",
+    "Android"
+  ],
   "author": "amrlabib",
   "license": "ISC",
   "bugs": {
