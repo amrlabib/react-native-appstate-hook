@@ -1,0 +1,23 @@
+{
+  "name": "react-native-appstate-hook",
+  "version": "1.0.0",
+  "description": "React Native appState hook",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amrlabib/react-native-appstate-hook.git"
+  },
+  "author": "amrlabib",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amrlabib/react-native-appstate-hook/issues"
+  },
+  "homepage": "https://github.com/amrlabib/react-native-appstate-hook#readme",
+  "peerDependencies": {
+    "react": "^16.8.0",
+    "react-native": "0.59.0-rc.1",
+  }
+}
