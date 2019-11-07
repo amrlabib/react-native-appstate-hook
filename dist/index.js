@@ -8,7 +8,13 @@ export default function useAppState(settings) {
   function handleAppStateChange(nextAppState) {
     if (nextAppState === 'active') {
       isValidFunction(onForeground) && onForeground();
-    } else if(nextAppState.match(/inactive|background/)) {
+    } else if (
+      appState === 'active' &&
+      nextAppState.match(/inactive|background/)
+    ) {
+      // to ensure that onBackground() is not called twice we
+      // check if the previous app state was 'active' as iOS
+      // has two not-active-states (inactive and background)
       isValidFunction(onBackground) && onBackground();
     }
     setAppState(nextAppState);
