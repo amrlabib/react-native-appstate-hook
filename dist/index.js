@@ -32,3 +32,11 @@ export default function useAppState(settings) {
   }
   return { appState };
 }
+
+export function useOnAppComesToForeground(callback) {
+  return useAppState({ onForeground: callback });
+}
+
+export function useOnAppGoesToBackground(callback) {
+  return useAppState({ onBackground: callback });
+}
