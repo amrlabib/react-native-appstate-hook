@@ -7,7 +7,7 @@ export default function useAppState(settings) {
 
   useEffect(() => {
     function handleAppStateChange(nextAppState) {
-      if (nextAppState === 'active') {
+      if (nextAppState === 'active' && appState !== 'active') {
         isValidFunction(onForeground) && onForeground();
       } else if (appState === 'active' && nextAppState.match(/inactive|background/)) {
         isValidFunction(onBackground) && onBackground();
