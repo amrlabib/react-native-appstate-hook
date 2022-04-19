@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/amrlabib/react-native-appstate-hook#readme",
   "peerDependencies": {
-    "react": "^16.8.0",
-    "react-native": "^0.59.0"
+    "react": ">=16.8.0",
+    "react-native": ">=0.59.0"
   }
 }
