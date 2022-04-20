@@ -17,7 +17,7 @@ export default function useAppState(settings) {
     }
     const appState = AppState.addEventListener('change', handleAppStateChange);
 
-    return () => appState.remove();
+    return () => AppState.removeEventListener('change', handleAppStateChange);
   }, [onChange, onForeground, onBackground, appState]);
 
   // settings validation
