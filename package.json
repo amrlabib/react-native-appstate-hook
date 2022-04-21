@@ -1,6 +1,6 @@
 {
   "name": "react-native-appstate-hook",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "React Native appState hook",
   "main": "dist/index.js",
   "scripts": {
@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/amrlabib/react-native-appstate-hook#readme",
   "peerDependencies": {
-    "react": "^16.8.0",
-    "react-native": "^0.59.0"
+    "react": ">=16.8.0",
+    "react-native": ">=0.59.0"
   }
 }
