@@ -3,26 +3,26 @@ import { AppState } from 'react-native';
 
 export default function useAppState(settings) {
   const { onChange, onForeground, onBackground } = settings || {};
-  const [appState, setAppState] = useState(AppState.currentState);
+  const [currentState, setCurrentState] = useState(AppState.currentState);
 
   useEffect(() => {
     function handleAppStateChange(nextAppState) {
-      if (nextAppState === 'active' && appState !== 'active') {
+      if (nextAppState === 'active' && currentState !== 'active') {
         isValidFunction(onForeground) && onForeground();
-      } else if (appState === 'active' && nextAppState.match(/inactive|background/)) {
+      } else if (currentState === 'active' && nextAppState.match(/inactive|background/)) {
         isValidFunction(onBackground) && onBackground();
       }
-      setAppState(nextAppState);
+      setCurrentState(nextAppState);
       isValidFunction(onChange) && onChange(nextAppState);
     }
-    const appState = AppState.addEventListener('change', handleAppStateChange);
+    const appStateListener = AppState.addEventListener('change', handleAppStateChange);
 
-    return () => appState.remove();
-  }, [onChange, onForeground, onBackground, appState]);
+    return () => appStateListener.remove();
+  }, [onChange, onForeground, onBackground, currentState]);
 
   // settings validation
   function isValidFunction(func) {
     return func && typeof func === 'function';
   }
-  return { appState };
+  return { appState: currentState };
 }
