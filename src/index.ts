@@ -1,20 +1,33 @@
-import { useState, useEffect, useRef } from 'react';
-import { AppState } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { AppState, AppStateStatus } from 'react-native';
 
-function isValidFunction(func) {
+export interface AppStateHookSettings {
+  onChange?: (appState: AppStateStatus) => void;
+  onForeground?: () => void;
+  onBackground?: () => void;
+  onMemoryWarning?: () => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
+}
+
+export interface AppStateHookResult {
+  appState: AppStateStatus;
+}
+
+function isValidFunction<T extends (...args: never[]) => void>(func: T | undefined): func is T {
   return typeof func === 'function';
 }
 
-export default function useAppState(settings) {
+export default function useAppState(settings?: AppStateHookSettings): AppStateHookResult {
   const { onChange, onForeground, onBackground, onMemoryWarning, onFocus, onBlur } = settings || {};
-  const [appState, setAppState] = useState(AppState.currentState);
+  const [appState, setAppState] = useState<AppStateStatus>(AppState.currentState);
   const appStateRef = useRef(appState);
 
-  const callbacksRef = useRef();
+  const callbacksRef = useRef<AppStateHookSettings>({});
   callbacksRef.current = { onChange, onForeground, onBackground, onMemoryWarning, onFocus, onBlur };
 
   useEffect(() => {
-    function handleAppStateChange(nextAppState) {
+    function handleAppStateChange(nextAppState: AppStateStatus) {
       const previousAppState = appStateRef.current;
       if (nextAppState === 'active' && previousAppState !== 'active') {
         isValidFunction(callbacksRef.current.onForeground) && callbacksRef.current.onForeground();

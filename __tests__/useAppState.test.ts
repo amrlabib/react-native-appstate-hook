@@ -1,4 +1,5 @@
 import { renderHook, act } from '@testing-library/react-native';
+import type { AppStateEvent, AppStateStatus } from 'react-native';
 
 jest.mock('react-native', () => ({
   AppState: {
@@ -8,31 +9,34 @@ jest.mock('react-native', () => ({
 }));
 
 import { AppState } from 'react-native';
-import useAppState from '../dist/index';
+import useAppState from '../src/index';
+
+type Handler = (payload?: AppStateStatus) => void;
 
 describe('useAppState', () => {
-  let listenersByType;
+  let listenersByType: Partial<Record<AppStateEvent, Handler[]>>;
+  const mockAddEventListener = jest.mocked(AppState.addEventListener);
 
   beforeEach(() => {
     listenersByType = {};
     AppState.currentState = 'active';
-    AppState.addEventListener.mockReset();
-    AppState.addEventListener.mockImplementation((type, handler) => {
-      listenersByType[type] = listenersByType[type] || [];
-      listenersByType[type].push(handler);
+    mockAddEventListener.mockReset();
+    mockAddEventListener.mockImplementation((type, handler) => {
+      const listeners = listenersByType[type] ?? (listenersByType[type] = []);
+      listeners.push(handler as Handler);
       return { remove: jest.fn() };
     });
   });
 
-  function emit(type, payload) {
+  function emit(type: AppStateEvent, payload?: AppStateStatus) {
     act(() => {
       (listenersByType[type] || []).forEach((handler) => handler(payload));
     });
   }
 
-  function subscriptionFor(type) {
-    const callIndex = AppState.addEventListener.mock.calls.findIndex((call) => call[0] === type);
-    return AppState.addEventListener.mock.results[callIndex].value;
+  function subscriptionFor(type: AppStateEvent) {
+    const callIndex = mockAddEventListener.mock.calls.findIndex((call) => call[0] === type);
+    return mockAddEventListener.mock.results[callIndex].value;
   }
 
   test('returns the current app state on mount', () => {
@@ -94,8 +98,8 @@ describe('useAppState', () => {
     emit('change', 'background');
     emit('change', 'active');
 
-    const subscribedTypes = AppState.addEventListener.mock.calls.map((call) => call[0]);
-    expect(subscribedTypes.sort()).toEqual(['blur', 'change', 'focus', 'memoryWarning']);
+    const subscribedTypes = mockAddEventListener.mock.calls.map((call) => call[0]);
+    expect([...subscribedTypes].sort()).toEqual(['blur', 'change', 'focus', 'memoryWarning']);
 
     const subscriptions = subscribedTypes.map((type) => subscriptionFor(type));
     unmount();
@@ -104,21 +108,21 @@ describe('useAppState', () => {
 
   test('does not resubscribe when new inline callbacks are passed on every render', () => {
     const { rerender } = renderHook(
-      ({ onChange }) => useAppState({ onChange }),
+      ({ onChange }: { onChange: () => void }) => useAppState({ onChange }),
       { initialProps: { onChange: () => {} } }
     );
     rerender({ onChange: () => {} });
     rerender({ onChange: () => {} });
     rerender({ onChange: () => {} });
 
-    expect(AppState.addEventListener).toHaveBeenCalledTimes(4);
+    expect(mockAddEventListener).toHaveBeenCalledTimes(4);
   });
 
   test('still invokes the latest callback after a re-render with a new reference', () => {
     const firstOnChange = jest.fn();
     const secondOnChange = jest.fn();
     const { rerender } = renderHook(
-      ({ onChange }) => useAppState({ onChange }),
+      ({ onChange }: { onChange: (appState: AppStateStatus) => void }) => useAppState({ onChange }),
       { initialProps: { onChange: firstOnChange } }
     );
     rerender({ onChange: secondOnChange });

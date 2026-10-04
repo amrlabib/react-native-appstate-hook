@@ -52,10 +52,10 @@ All settings are optional — pass only the callbacks you need.
 
 | Key | Type | Description |
 | --- | --- | --- |
-| `onChange` | `(appState: string) => void` | Called on every app state transition, with the new state. |
+| `onChange` | `(appState: AppStateStatus) => void` | Called on every app state transition, with the new state. |
 | `onForeground` | `() => void` | Called when the app transitions into the `active` state. |
 | `onBackground` | `() => void` | Called when the app leaves the `active` state for `inactive` or `background`. |
-| `onMemoryWarning` | `() => void` | Called when the OS reports a low-memory warning. iOS and Android. This is a point-in-time signal, not a state the app stays in — it can fire while the app is active or backgrounded. |
+| `onMemoryWarning` | `() => void` | **iOS only.** Called when the OS reports a low-memory warning. This is a point-in-time signal, not a state the app stays in — it can fire while the app is active or backgrounded. |
 | `onFocus` | `() => void` | **Android only.** Called when the app's window gains OS input focus. |
 | `onBlur` | `() => void` | **Android only.** Called when the app's window loses OS input focus — e.g. a system dialog or another app (split-screen/multi-window) is shown over it — *without* the app actually backgrounding. |
 
@@ -64,7 +64,7 @@ All settings are optional — pass only the callbacks you need.
 
 | Key | Type | Description |
 | --- | --- | --- |
-| `appState` | `string` | The current app state: `active`, `inactive`, or `background` (iOS may also briefly report `unknown` or `extension`). |
+| `appState` | `AppStateStatus` | The current app state: `active`, `background`, or `inactive` (iOS only). |
 
 
 ## License

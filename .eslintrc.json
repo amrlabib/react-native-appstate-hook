@@ -5,21 +5,18 @@
     "node": true,
     "jest": true
   },
-  "parser": "@babel/eslint-parser",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "requireConfigFile": false,
     "ecmaVersion": "latest",
-    "sourceType": "module",
-    "babelOptions": {
-      "presets": ["module:metro-react-native-babel-preset"]
-    }
+    "sourceType": "module"
   },
-  "plugins": ["react-hooks"],
-  "extends": ["eslint:recommended"],
+  "plugins": ["@typescript-eslint", "react-hooks"],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   "rules": {
-    "no-shadow": "error",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "error",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn"
   },
-  "ignorePatterns": ["node_modules/", "coverage/"]
+  "ignorePatterns": ["node_modules/", "coverage/", "dist/"]
 }
