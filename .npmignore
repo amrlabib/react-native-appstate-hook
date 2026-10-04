@@ -5,5 +5,6 @@ yarn-error.log
 
 __tests__
 .github
+.husky
 *.config.js
 .eslintrc.json
