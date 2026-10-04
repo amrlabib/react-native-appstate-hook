@@ -1,0 +1,25 @@
+{
+  "root": true,
+  "env": {
+    "es2021": true,
+    "node": true,
+    "jest": true
+  },
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "babelOptions": {
+      "presets": ["module:metro-react-native-babel-preset"]
+    }
+  },
+  "plugins": ["react-hooks"],
+  "extends": ["eslint:recommended"],
+  "rules": {
+    "no-shadow": "error",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
+  },
+  "ignorePatterns": ["node_modules/", "coverage/"]
+}

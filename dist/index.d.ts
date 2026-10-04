@@ -5,6 +5,9 @@ declare module "react-native-appstate-hook" {
     onChange?: (status: AppStateStatus) => void;
     onForeground?: () => void;
     onBackground?: () => void;
+    onMemoryWarning?: () => void;
+    onFocus?: () => void;
+    onBlur?: () => void;
   }
 
   export interface AppStateHookResult {

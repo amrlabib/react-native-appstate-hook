@@ -1,9 +1,9 @@
 node_modules
-src
 .DS_Store
-build
-!.eslintrc
+coverage
 yarn-error.log
 
-*.js
-!dist/index.js
+__tests__
+.github
+*.config.js
+.eslintrc.json
