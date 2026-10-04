@@ -2,13 +2,6 @@
 
 A small React hook around React Native's [`AppState`](https://reactnative.dev/docs/appstate) API — know when your app goes to the foreground or background, and react to memory warnings and window focus changes, without wiring up `AppState.addEventListener`.
 
-## Requirements
-
-- `react` >= 16.8.0
-- `react-native` >= 0.65.0
-
-(The hook uses the subscription-based `AppState.addEventListener` API, which replaced the deprecated `removeEventListener` in React Native 0.65.)
-
 ## Installation
 
 ```sh
