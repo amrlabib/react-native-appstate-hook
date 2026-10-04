@@ -1,9 +1,13 @@
 node_modules
-src
 .DS_Store
-build
-!.eslintrc
+coverage
 yarn-error.log
 
-*.js
-!dist/index.js
+__tests__
+.github
+.husky
+src
+tsconfig.json
+tsconfig.build.json
+*.config.js
+.eslintrc.json

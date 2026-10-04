@@ -1,5 +1,6 @@
 node_modules
 .DS_Store
-build
-!.eslintrc
+coverage
 yarn-error.log
+.husky/_
+dist

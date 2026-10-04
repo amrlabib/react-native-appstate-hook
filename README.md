@@ -1,62 +1,72 @@
-## react-native-appstate-hook
+# react-native-appstate-hook
 
-React Native appState hook is a custom [react hook](https://reactjs.org/docs/hooks-intro.html), built to handle iOS or Android `appState` in your react component
+A small React hook around React Native's [`AppState`](https://reactnative.dev/docs/appstate) API — know when your app goes to the foreground or background, and react to memory warnings and window focus changes, without wiring up `AppState.addEventListener`.
 
-#### Note:
+## Requirements
 
-React hooks is available from react version 16.8.0 and react native version 0.59.0
+- `react` >= 16.8.0
+- `react-native` >= 0.65.0
 
----
+(The hook uses the subscription-based `AppState.addEventListener` API, which replaced the deprecated `removeEventListener` in React Native 0.65.)
 
-## Setup
+## Installation
 
-`yarn add react-native-appstate-hook`
+```sh
+npm install react-native-appstate-hook
+# or
+yarn add react-native-appstate-hook
+```
 
-OR
+## Usage
 
-`npm install --save react-native-appstate-hook`
-
----
-
-## Example
-
-```javascript
+```jsx
 import React from 'react';
 import { Text, View } from 'react-native';
 import useAppState from 'react-native-appstate-hook';
 
-
 export default function App() {
   const { appState } = useAppState({
-    onChange: (newAppState) => console.warn('App state changed to ', newAppState),
-    onForeground: () => console.warn('App went to Foreground'),
-    onBackground: () => console.warn('App went to background'),
+    onChange: (newAppState) => console.log('App state changed to', newAppState),
+    onForeground: () => console.log('App came to the foreground'),
+    onBackground: () => console.log('App went to the background'),
+    onMemoryWarning: () => console.log('App received a memory warning'),
+    onFocus: () => console.log('App window gained focus (Android only)'),
+    onBlur: () => console.log('App window lost focus (Android only)'),
   });
 
   return (
-    <View style={{textAlign: 'center', backgroundColor :'white', flex: 1, justifyContent: 'center'}}>
-      <Text>App State is: {appState}</Text>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>App state is: {appState}</Text>
     </View>
   );
 }
-
-
 ```
 
----
+All settings are optional — pass only the callbacks you need.
 
-## Settings
+## API
 
-| key | Type | Required | Description |
-| --- | --- | --- | ---- |
-| onChange | Function | No | callback function to be executed once `appState` is changed |
-| onForeground | Function | No | callback function to be executed once app go to foreground |
-| onBackground | Function | No | callback function to be executed once app go to background |
+### Settings
 
----
+`useAppState` takes a single, optional settings object:
 
-## Values
+| Key | Type | Description |
+| --- | --- | --- |
+| `onChange` | `(appState: AppStateStatus) => void` | Called on every app state transition, with the new state. |
+| `onForeground` | `() => void` | Called when the app transitions into the `active` state. |
+| `onBackground` | `() => void` | Called when the app leaves the `active` state for `inactive` or `background`. |
+| `onMemoryWarning` | `() => void` | **iOS only.** Called when the OS reports a low-memory warning. This is a point-in-time signal, not a state the app stays in — it can fire while the app is active or backgrounded. |
+| `onFocus` | `() => void` | **Android only.** Called when the app's window gains OS input focus. |
+| `onBlur` | `() => void` | **Android only.** Called when the app's window loses OS input focus — e.g. a system dialog or another app (split-screen/multi-window) is shown over it — *without* the app actually backgrounding. |
 
-| key | Type | Description |
-| --- | --- | ---- |
-| appState | string | app state it can be one of the following values `active`, `inactive`, or `background` |
+
+### Return value
+
+| Key | Type | Description |
+| --- | --- | --- |
+| `appState` | `AppStateStatus` | The current app state: `active`, `background`, or `inactive` (iOS only). |
+
+
+## License
+
+MIT
