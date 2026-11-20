@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { AppState, AppStateStatus } from 'react-native';
+import { AppState, AppStateStatus, Platform } from 'react-native';
 
 export interface AppStateHookSettings {
   onChange?: (appState: AppStateStatus) => void;
@@ -53,8 +53,9 @@ export default function useAppState(settings?: AppStateHookSettings): AppStateHo
 
     const changeSubscription = AppState.addEventListener('change', handleAppStateChange);
     const memoryWarningSubscription = AppState.addEventListener('memoryWarning', handleMemoryWarning);
-    const focusSubscription = AppState.addEventListener('focus', handleFocus);
-    const blurSubscription = AppState.addEventListener('blur', handleBlur);
+    const isAndroid = Platform.OS === 'android';
+    const focusSubscription = isAndroid ? AppState.addEventListener('focus', handleFocus) : undefined;
+    const blurSubscription = isAndroid ? AppState.addEventListener('blur', handleBlur) : undefined;
 
     return () => {
       changeSubscription?.remove();

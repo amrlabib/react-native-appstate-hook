@@ -6,9 +6,10 @@ jest.mock('react-native', () => ({
     currentState: 'active',
     addEventListener: jest.fn(),
   },
+  Platform: { OS: 'android' },
 }));
 
-import { AppState } from 'react-native';
+import { AppState, Platform } from 'react-native';
 import useAppState from '../src/index';
 
 type Handler = (payload?: AppStateStatus) => void;
@@ -26,6 +27,10 @@ describe('useAppState', () => {
       listeners.push(handler as Handler);
       return { remove: jest.fn() };
     });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   function emit(type: AppStateEvent, payload?: AppStateStatus) {
@@ -91,6 +96,23 @@ describe('useAppState', () => {
     renderHook(() => useAppState({ onBlur }));
     emit('blur');
     expect(onBlur).toHaveBeenCalledTimes(1);
+  });
+
+  test('tracks app state without subscribing to focus or blur on iOS', () => {
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    const { result, unmount } = renderHook(() => useAppState());
+
+    const subscribedTypes = mockAddEventListener.mock.calls.map(([type]) => type);
+    expect(subscribedTypes.sort()).toEqual(['change', 'memoryWarning']);
+
+    emit('change', 'background');
+    expect(result.current.appState).toBe('background');
+    emit('change', 'active');
+    expect(result.current.appState).toBe('active');
+
+    const subscriptions = subscribedTypes.map((type) => subscriptionFor(type));
+    unmount();
+    subscriptions.forEach((subscription) => expect(subscription.remove).toHaveBeenCalledTimes(1));
   });
 
   test('subscribes once per mount to each event and unsubscribes all on unmount', () => {
